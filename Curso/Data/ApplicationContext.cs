@@ -18,8 +18,9 @@ namespace Curso.Data
             const string strConnection="Data Source=.\\SQLEXPRESS;Initial Catalog=C002;Integrated Security=True;pooling=false";
             optionsBuilder
                 .UseSqlServer(strConnection)
-                .EnableSensitiveDataLogging();
-                //.LogTo(Console.WriteLine, LogLevel.Information);
+                .EnableSensitiveDataLogging()
+                //.UseLazyLoadingProxies()
+                .LogTo(Console.WriteLine, LogLevel.Information);
         }
     }
 }
