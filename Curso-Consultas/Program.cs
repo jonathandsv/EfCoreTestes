@@ -16,7 +16,73 @@ namespace DominandoEFCore
             //ConsultaInterpolada();
             //ConsultaComTag();
             //EntendendoConsulta1NN1();
-            DivisaoDeConsulta();
+            //DivisaoDeConsulta();
+            //CriarStoredProcedure();
+            //InserirDadosViaStoredProcedure();
+            //CriarStoredProcedureDeConsulta();
+            ConsultaViaStoredProcedure();
+        }
+
+        static void ConsultaViaStoredProcedure()
+        {
+            using var db = new Curso.Data.ApplicationContext();
+
+            var dep = new SqlParameter("@dep", "Departamento");
+
+            var departamentos = db.Departamentos
+                //.FromSqlRaw("EXECUTE GetDepartamentos @dep", dep)
+                .FromSqlInterpolated($"EXECUTE GetDepartamentos {dep}")
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine(departamento.Descricao);
+            }
+        }
+
+        static void CriarStoredProcedureDeConsulta()
+        {
+            var getDepartamentos = @"
+            CREATE OR ALTER PROCEDURE GetDepartamentos
+                @Descricao VARCHAR(50)
+            AS
+            BEGIN
+                SELECT * FROM Departamentos WHERE Descricao LIKE @Descricao + '%'
+            END        
+            ";
+            
+            using var db = new Curso.Data.ApplicationContext();
+
+            db.Database.ExecuteSqlRaw(getDepartamentos);
+        }
+
+        static void InserirDadosViaStoredProcedure()
+        {
+            using var db = new Curso.Data.ApplicationContext();
+
+            db.Database
+                .ExecuteSqlRaw("execute CriarDepartamento @p0, @p1", 
+                    "Departamento Via Procedure",
+                     true);
+        }
+
+        static void CriarStoredProcedure()
+        {
+            var criarDepartamento = @"
+            CREATE OR ALTER PROCEDURE CriarDepartamento
+                @Descricao VARCHAR(50),
+                @Ativo bit
+            AS
+            BEGIN
+                INSERT INTO 
+                    Departamentos(Descricao, Ativo, Excluido) 
+                VALUES (@Descricao, @Ativo, 0)
+            END        
+            ";
+            
+            using var db = new Curso.Data.ApplicationContext();
+
+            db.Database.ExecuteSqlRaw(criarDepartamento);
         }
 
         static void DivisaoDeConsulta() 

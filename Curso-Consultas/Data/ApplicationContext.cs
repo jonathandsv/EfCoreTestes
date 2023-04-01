@@ -17,7 +17,8 @@ namespace Curso.Data
         {
             const string strConnection="Data Source=.\\SQLEXPRESS;Initial Catalog=DevIO-02;Integrated Security=True;pooling=false";
             optionsBuilder
-                .UseSqlServer(strConnection, p=>p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+                .UseSqlServer(strConnection)
+                //.UseSqlServer(strConnection, p=>p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
                 .EnableSensitiveDataLogging()
                 .LogTo(Console.WriteLine, LogLevel.Information);
         }
