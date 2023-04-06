@@ -18,6 +18,15 @@ namespace Curso.Data
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Conversor> Conversores { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Governador> Governadores { get; set; }
+        public DbSet<Cidade> Cidades { get; set; }
+        public DbSet<Ator> Atores { get; set; }
+        public DbSet<Filme> Filmes { get; set; }
+        public DbSet<Documento> Documentos { get; set; }
+        public DbSet<Pessoa> Pessoas { get; set; }
+        public DbSet<Instrutor> Instrutores { get; set; }
+        public DbSet<Aluno> Alunos { get; set; }
+        public DbSet<Dictionary<string, object>> Configuracoes => Set<Dictionary<string, object>>("Configuracoes");
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -95,14 +104,29 @@ namespace Curso.Data
 
             modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");
 
-            modelBuilder.Entity<Cliente>(p => 
-            {
-                p.OwnsOne(x=> x.Endereco, end => 
-                {
-                    end.Property(p=>p.Bairro).HasColumnName("Bairro");
+            // modelBuilder.Entity<Cliente>(p => 
+            // {
+            //     p.OwnsOne(x=> x.Endereco, end => 
+            //     {
+            //         end.Property(p=>p.Bairro).HasColumnName("Bairro");
 
-                    end.ToTable("Endereco");
-                });
+            //         end.ToTable("Endereco");
+            //     });
+            // });
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+
+            modelBuilder.SharedTypeEntity<Dictionary<string, object>>("Configuracoes", b =>
+            {
+                b.Property<int>("Id");
+
+                b.Property<string>("Chave")
+                    .HasColumnType("VARCHAR(40)")
+                    .IsRequired();
+
+                b.Property<string>("Valor")
+                    .HasColumnType("VARCHAR(255)")
+                    .IsRequired();
             });
         }
     }
