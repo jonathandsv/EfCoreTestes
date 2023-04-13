@@ -31,7 +31,24 @@ namespace DominandoEFCore
             //FuncaoDataLength();
             //FuncaoProperty();
             //FuncaoCollate();
-            TesteInterceptacao();
+            //TesteInterceptacao();
+            TesteInterceptacaoSaveChanges();
+        }
+
+        static void TesteInterceptacaoSaveChanges()
+        {
+            using (var db = new Curso.Data.ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                db.Funcoes.Add(new Funcao
+                {
+                    Descricao1 = "Teste"
+                });
+
+                db.SaveChanges();
+            }
         }
 
         static void TesteInterceptacao()

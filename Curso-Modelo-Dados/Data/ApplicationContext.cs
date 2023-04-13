@@ -40,6 +40,8 @@ namespace Curso.Data
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .AddInterceptors(new InterceptadorDeComandos())
+                .AddInterceptors(new InterceptadorDeConexao())
+                .AddInterceptors(new InterceptadorPersistencia())
                 //.EnableDetailedErrors()
                 ;
         }
