@@ -16,7 +16,63 @@ namespace DominandoEFCore
             //ComportamentoPadrao();
             //ReverterTransacao();
             //SalvarPontoTransacao();
-            TransactionScope();
+            //TransactionScope();
+
+            //Funções UDFS
+
+            //FuncaoLEFT();
+            //FuncaoDefinidaPeloUsuario();
+            DateDIFF();
+        }
+
+        static void DateDIFF() 
+        {
+            CadastrarLivro();
+
+            using var db = new Curso.Data.ApplicationContext();
+
+            var resultado = db.Livros.Select(p => Curso.Funcoes.MinhasFuncoes.DateDiff("DAY", p.CadastradoEm, DateTime.Now));
+
+            foreach (var diff in resultado)
+            {
+                Console.WriteLine(diff);
+            }
+        }
+
+        static void FuncaoDefinidaPeloUsuario() 
+        {
+            CadastrarLivro();
+
+            using var db = new Curso.Data.ApplicationContext();
+
+            db.Database.ExecuteSqlRaw(@"
+                CREATE FUNCTION ConverterParaLetrasMaiusculas(@dados VARCHAR(100))
+                RETURNS VARCHAR(100)
+                BEGIN
+                    RETURN UPPER(@dados)
+                END");
+            
+            var resultado = db.Livros.Select(p=> Curso.Funcoes.MinhasFuncoes.LetrasMaiusculas(p.Titulo));
+
+            foreach (var parteTitulo in resultado)
+            {
+                Console.WriteLine(parteTitulo);
+            }
+        }
+
+        static void FuncaoLEFT()
+        {
+            CadastrarLivro();
+
+            using var db = new Curso.Data.ApplicationContext();
+
+            // var resultado = db.Livros.Select(p=> Curso.Data.ApplicationContext.Left(p.Titulo, 10));
+            var resultado = db.Livros.Select(p=> Curso.Funcoes.MinhasFuncoes.Left(p.Titulo, 10));
+
+            foreach (var parteTitulo in resultado)
+            {
+                Console.WriteLine(parteTitulo);
+            }
         }
 
         static void TransactionScope()
@@ -214,7 +270,8 @@ namespace DominandoEFCore
                     new Livro
                     {
                         Titulo = "Introdução ao Entity Framework Core",
-                        Autor = "Rafael"
+                        Autor = "Rafael",
+                        CadastradoEm = DateTime.Now.AddDays(-1)
                     }); 
 
                 db.SaveChanges();

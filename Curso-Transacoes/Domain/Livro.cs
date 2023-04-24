@@ -13,5 +13,6 @@ namespace Curso.Domain
 
         [Column(TypeName = "VARCHAR(15)")]
         public string Autor { get; set; }
+        public DateTime CadastradoEm {get;set;}
     }
 }
